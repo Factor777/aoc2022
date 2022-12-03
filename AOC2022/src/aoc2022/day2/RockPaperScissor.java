@@ -10,12 +10,18 @@ public class RockPaperScissor {
 
 	Map<String, Integer> scoreShapes = new HashMap();
 	Map<String, Integer> scoreRound = new HashMap();
+
+	Map<String, String> shapeToSelect = new HashMap();
+	Map<String, Integer> scoreRound2 = new HashMap();
 	int totalScore = 0;
+	int totalScore2 = 0;
 
 	public static void main(String[] args) {
 		RockPaperScissor rockPaperScissor = new RockPaperScissor();
 		int score = rockPaperScissor.getTotalScore();
 		System.out.println(score);
+		int score2 = rockPaperScissor.getTotalScore2();
+		System.out.println(score2);
 	}
 
 	public RockPaperScissor() {
@@ -32,11 +38,32 @@ public class RockPaperScissor {
 		scoreRound.put("CY", 0);
 		scoreRound.put("CZ", 3);
 
+		shapeToSelect.put("AX", "Z"); 
+		shapeToSelect.put("AY", "X");
+		shapeToSelect.put("AZ", "Y");
+		shapeToSelect.put("BX", "X"); 
+		shapeToSelect.put("BY", "Y");
+		shapeToSelect.put("BZ", "Z");
+		shapeToSelect.put("CX", "Y"); 
+		shapeToSelect.put("CY", "Z");
+		shapeToSelect.put("CZ", "X");
+		scoreRound2.put("AX", 0);
+		scoreRound2.put("AY", 3);
+		scoreRound2.put("AZ", 6);
+		scoreRound2.put("BX", 0);
+		scoreRound2.put("BY", 3);
+		scoreRound2.put("BZ", 6);
+		scoreRound2.put("CX", 0);
+		scoreRound2.put("CY", 3);
+		scoreRound2.put("CZ", 6);
+
 		totalScore = 0;
+		totalScore2 = 0;
 		try (BufferedReader br = new BufferedReader(new FileReader("Resources\\day2\\strategy.txt"))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				totalScore += calcPoints(line.charAt(0), line.charAt(2));
+				totalScore2 += calcPoints2(line.charAt(0), line.charAt(2));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -49,8 +76,18 @@ public class RockPaperScissor {
 		return myScore + roundScore;
 	}
 
+	private int calcPoints2(char otherHand, char myHand) {
+		int myScore = scoreShapes.get(shapeToSelect.get("" + otherHand + myHand));
+		int roundScore = scoreRound2.get("" + otherHand + myHand);
+		return myScore + roundScore;
+	}
+
 	private int getTotalScore() {
 		return totalScore;
+	}
+
+	private int getTotalScore2() {
+		return totalScore2;
 	}
 
 }
