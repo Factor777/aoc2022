@@ -15,7 +15,7 @@ public class Elves {
 	List<Map.Entry<Integer, Integer>> sorted;
 
 	Elves(){
-		try (BufferedReader br = new BufferedReader(new FileReader("Resources\\calories1.txt"))) {
+		try (BufferedReader br = new BufferedReader(new FileReader("Resources\\day1\\calories1.txt"))) {
 			String line;
 			int elfId = 0;
 			int totCals = 0;
