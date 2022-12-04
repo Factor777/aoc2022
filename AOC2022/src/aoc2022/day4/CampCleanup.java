@@ -22,21 +22,33 @@ public class CampCleanup {
 			String line;
 			int row = 0;
 			int score = 0;
+			int score2 = 0;
 			while ((line = br.readLine()) != null) {
 				List<Integer> values = getLimits(line);
-				if (overlaps(values)) {
+				if (overlapsFully(values)) {
 					score++;
 				}
+				if (overlapsFully(values) || overlapsPartly(values)) {
+					score2++;
+				}
+
 			}
 			System.out.println(score);
+			System.out.println(score2);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private boolean overlaps(List<Integer> values) {
+	private boolean overlapsFully(List<Integer> values) {
 		return (values.get(MIN_1) <= values.get(MIN_2) && values.get(MAX_1) >= values.get(MAX_2)
 				|| values.get(MIN_1) >= values.get(MIN_2) && values.get(MAX_1) <= values.get(MAX_2));
+	}
+
+	private boolean overlapsPartly(List<Integer> values) {
+		return (values.get(MAX_1) >= values.get(MIN_2) && values.get(MAX_1) <= values.get(MAX_2)
+				|| values.get(MIN_1) >= values.get(MIN_2) && values.get(MIN_1) <= values.get(MAX_2)
+				|| values.get(MAX_1) == values.get(MAX_2) || values.get(MAX_1) == values.get(MAX_2));
 	}
 
 	private List<Integer> getLimits(String line) {
