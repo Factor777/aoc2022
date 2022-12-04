@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,15 +17,41 @@ public class RuckSack {
 
 	public static void main(String[] args) {
 		ruckSack = new RuckSack();
-		System.out.println(ruckSack.getTotPrioScore());
+		
+		int score = ruckSack.getRucksackScore();
+		int score2 = ruckSack.getGroupScore();
+		System.out.println(score);
+		System.out.println(score2);
 	}
-
-	public RuckSack() {
+	
+	private int getRucksackScore() {
 		Map<Character, Integer> compartment1 = new HashMap();
 		Map<Character, Integer> compartment2 = new HashMap();
-
-		Map<Character, Integer> rucksack = new HashMap();
 		List<Set<Character>> rucksacks = new ArrayList();
+
+		try (BufferedReader br = new BufferedReader(new FileReader("Resources\\day3\\input.txt"))) {
+			String line;
+			int row = 0;
+			while ((line = br.readLine()) != null) {
+				row++;
+				compartment1.clear();
+				compartment2.clear();
+				int length = line.length() / 2;
+				checkCompartment(compartment1, line, 0, length);
+				checkCompartment(compartment2, line, length, length * 2);
+				rucksacks.add(compartment1.keySet());
+				rucksacks.add(compartment2.keySet());
+				Character item = getCommonItem(0, rucksacks.get(0), rucksacks);
+				calcPrio(item);
+			}
+		} catch (IOException e) {
+				e.printStackTrace();
+			}		
+		return totPrioScore;
+	}
+
+	
+	private int getGroupScore() {
 		List<Set<Character>> group = new ArrayList();
 
 		totPrioScore = 0;
@@ -35,40 +60,33 @@ public class RuckSack {
 			int row = 0;
 			while ((line = br.readLine()) != null) {
 				row++;
-				compartment1.clear();
-				compartment2.clear();
-				rucksack.clear();
-				group.clear();
-				int length = line.length() / 2;
-				checkCompartment(compartment1, line, 0, length);
-				checkCompartment(compartment2, line, length, length * 2);
-				rucksacks.add(compartment1.keySet());
-				rucksacks.add(compartment2.keySet());
-				checkCompartment(rucksack, line, 0, length * 2);
+				Map<Character, Integer> rucksack = new HashMap();
+				checkCompartment(rucksack, line, 0, line.length());
 				group.add(rucksack.keySet());
-				Character item = getCommonItem(0, compartment1.keySet(), rucksacks);
 				if(row % 3 == 0) {
-					item = getCommonItem(0, compartment1.keySet(), group);
-				}
-				if (item != null) {
-					int prio = (int) item;
-					if (item.isLowerCase(item)) {
-						prio -= (int) 'a';
-						prio += 1;
-					} else {
-						prio -= (int) 'A';
-						prio += 27;
-					}
-					totPrioScore += prio;
+					Character item = getCommonItem(0, group.get(0), group);
+					group.clear();
+					calcPrio(item);
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return totPrioScore;
 	}
 
-	private int getTotPrioScore() {
-		return totPrioScore;
+	private void calcPrio(Character item) {
+		if (item != null) {
+			int prio = (int) item;
+			if (item.isLowerCase(item)) {
+				prio -= (int) 'a';
+				prio += 1;
+			} else {
+				prio -= (int) 'A';
+				prio += 27;
+			}
+			totPrioScore += prio;
+		}
 	}
 
 	private void checkCompartment(Map<Character, Integer> compartment, String line, int start, int length) {
@@ -96,5 +114,4 @@ public class RuckSack {
 		}
 		return currentChars.iterator().next();
 	}
-
 }
