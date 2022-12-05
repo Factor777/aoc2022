@@ -7,7 +7,6 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class Stacks {
 
@@ -29,8 +28,13 @@ public class Stacks {
 					Integer amount = Integer.valueOf(split[0].trim());
 					Integer from = Integer.valueOf(split[1].trim());
 					Integer to = Integer.valueOf(split[2].trim());
+					Deque<String> tempDeque = new ArrayDeque<String>();
 					for (int i = 0; i < amount; i++) {
-						stacks.get(to).push(stacks.get(from).pop());
+//						stacks.get(to).push(stacks.get(from).pop());
+						tempDeque.push(stacks.get(from).pop());
+					}
+					for (int i = 0; i < amount; i++) {
+						stacks.get(to).push(tempDeque.pop());
 					}
 				}
 			}
@@ -39,8 +43,6 @@ public class Stacks {
 				res.append(stacks.get(key).peek());
 			}
 			System.out.println(res);
-
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
