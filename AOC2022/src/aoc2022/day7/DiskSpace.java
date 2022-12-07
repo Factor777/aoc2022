@@ -24,14 +24,25 @@ public class DiskSpace {
 			Node rootNode = new Node(null, br);
 			rootNode.parse();
 			
-			int counter = 0;
+			int size = 0;
 			rootNode.getNodes(nodes);
 			for (Node node : nodes) {
 				if(node.size <= 100000) {
-					counter += node.size;
+					size += node.size;
 				}
 			}
-			System.out.println(counter);
+			System.out.println("Tot:" + size);
+			int sizeLeft = 70000000 - rootNode.size;
+			int minSizeToFree = 30000000 - sizeLeft;
+			Node smalestOk = nodes.get(0);
+			for (Node node : nodes) {
+				if(node.size >= minSizeToFree && node.size < smalestOk.size) {
+					smalestOk = node;
+				}
+				System.out.println(node.size);
+			}
+			System.out.println(smalestOk.size);
+
 
 		} catch (IOException e) {
 			e.printStackTrace();
